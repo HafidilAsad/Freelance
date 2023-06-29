@@ -2,8 +2,15 @@ import React from "react";
 import ControlRoom from "../asset/ctrl.jpg";
 import Crane from "../asset/crane.jpg";
 import Cooling from "../asset/cooling.jpg";
+import { useNavigate } from "react-router-dom";
 
 const ContentHome = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/overview");
+  };
+
   return (
     <div
       className="container-fluid  justify-content-center "
@@ -29,7 +36,9 @@ const ContentHome = () => {
               </div>
               <div className="card-footer d-flex justify-content-between">
                 <small className="text-muted">Last updated 3 mins ago</small>
-                <button className="btn btn-primary">RUNNING</button>
+                <button className="btn btn-primary" onClick={handleButtonClick}>
+                  RUNNING
+                </button>
               </div>
             </div>
           </div>

@@ -2,10 +2,12 @@ import React from "react";
 import { useState } from "react";
 import Logo from "../../components/asset/logo.jpg";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -17,6 +19,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate("/home");
     // Handle form submission logic
   };
   return (
@@ -28,7 +31,7 @@ const Login = () => {
               <img
                 src={Logo}
                 className="img-fluid"
-                alt="Phone image"
+                alt="Phone"
                 style={{ height: 450 }}
               />
             </div>
@@ -40,7 +43,7 @@ const Login = () => {
                     UserName
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     id="form1Example13"
                     className="form-control form-control-lg"
                     value={email}
