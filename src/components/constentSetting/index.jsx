@@ -1,6 +1,47 @@
 import React from "react";
 import "./index.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 const ContentSetting = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleButtonClick = async () => {
+    try {
+      const response = await axios.patch(
+        "http://localhost:5100/control_rooms/1",
+        {
+          pv: inputValue,
+        }
+      );
+      console.log("Database updated successfully:", response.data);
+    } catch (error) {
+      console.error("Error updating database:", error);
+    }
+  };
+
+  const [realtime, setRealtime] = useState([]);
+  //mengambil data realtime dari power meter
+
+  const getRealtime = async () => {
+    try {
+      const response = await axios.get("http://localhost:5100/control_rooms");
+      setRealtime(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+    // const result = await axios.get("http://10.14.51.17:5000/mc57s");
+    // setRealtime(result.data);
+  };
+
+  useEffect(() => {
+    getRealtime();
+  });
+
   return (
     <div>
       <div className="row">
@@ -59,16 +100,39 @@ const ContentSetting = () => {
         <div className="col m-2">
           <div className="card ">
             <div
-              className="card-body bg-light text-center fs-1 fw-bold rounded"
+              className="card-body bg-light text-center fs-1 fw-bold rounded d-flex align-items-center justify-content-center"
               style={{ borderBottom: "2px solid #1ac953" }}
             >
-              <span
-                className="rounded bg-black text-white p-2"
-                style={{ border: "2px solid grey" }}
+              <input
+                type="text"
+                className="rounded bg-black text-white p-2 text-center"
+                style={{ border: "2px solid grey", width: 150 }}
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+              <button
+                className="btn  btn-primary fs-1 m-2"
+                onClick={handleButtonClick}
               >
-                ####,#
-              </span>
-              mbar
+                SET
+              </button>
+            </div>
+            <div
+              className="card-body bg-light text-center fs-1 fw-bold rounded d-flex align-items-center justify-content-center"
+              style={{ borderBottom: "2px solid #1ac953" }}
+            >
+              {realtime
+                .filter(({ id }) => id === 1)
+                .map((item) => (
+                  <span
+                    className="rounded bg-black text-white p-2"
+                    style={{ border: "2px solid grey", width: 150 }}
+                    key={item.id}
+                  >
+                    {item.pv}
+                  </span>
+                ))}
+              <p className=" fs-1 m-2">Actual</p>
             </div>
           </div>
           <p className="fw-bold fs-4">Hysterisis (+/-)</p>
@@ -91,12 +155,17 @@ const ContentSetting = () => {
         <div className="col m-2 ">
           <div className="card  " style={{ paddingBottom: 75, paddingTop: 75 }}>
             <div className="card-body bg-light text-center fs-1 fw-bold rounded">
-              <span
-                className="rounded bg-black text-white py-5"
-                style={{ border: "2px solid grey" }}
-              >
-                ####,#
-              </span>
+              {realtime
+                .filter(({ id }) => id === 1)
+                .map((item) => (
+                  <span
+                    className="rounded bg-black text-white py-3"
+                    style={{ border: "2px solid grey" }}
+                    key={item.id}
+                  >
+                    {item.sv}
+                  </span>
+                ))}
               mbar
             </div>
           </div>
